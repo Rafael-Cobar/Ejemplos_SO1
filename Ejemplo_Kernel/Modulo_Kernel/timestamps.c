@@ -57,7 +57,7 @@ escribir_archivo(struct file *file, const char __user *buffer, size_t count, lof
 static int
 abrir_archivo(struct inode *inode, struct file *file)
 {
-    return cargar_tiempo(file, mostrar_archivo, NULL);
+    return single_open(file, cargar_tiempo, NULL);
 }
 
 static struct file_operations operaciones = {
@@ -71,10 +71,10 @@ static struct file_operations operaciones = {
 };
 
 // fnInicio = se ejecuta al iniciar modulo
-static int __init
-fnInicio(void)
+static int __init fnInicio(void)
 {
     struct proc_dir_entry *entry; // puntero de una estructura
+
     // timesptamps = nombre del archivo, 0777 = permiso del archivo, &operaciones = funciones
     entry = proc_create("timestamps", 0777, NULL, &operaciones); // creamos una nueva estructura, crea el archivo
 
@@ -98,5 +98,5 @@ static void __exit fnExit(void)
 }
 
 // ******************* Funciones importantes *********************
-MODULE_INIT(fnInicio); // se ejecuta al iniciar
-MODULE_EXIT(fnExit);   // se ejecuta para finalizar
+module_init(fnInicio); // se ejecuta al iniciar
+module_exit(fnExit);   // se ejecuta para finalizar
